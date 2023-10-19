@@ -15,7 +15,8 @@ Including another URLconf
 """
 from django.urls import path, include
 from .views import TodoListView
+from .services import MongoTodoService
 
 urlpatterns = [
-    path('todos/', TodoListView.as_view(), name='signup'),
+    path('todos/', TodoListView.as_view(todo_service = MongoTodoService()), name='signup'), 
 ]

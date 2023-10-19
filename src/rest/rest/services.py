@@ -3,7 +3,6 @@ from pymongo import MongoClient
 from abc import ABC, abstractmethod
 
 class TodoService(ABC):
-
     @abstractmethod
     def get_all_todos(self):
         pass
