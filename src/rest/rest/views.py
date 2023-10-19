@@ -2,25 +2,17 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-import json, logging, os
-from pymongo import MongoClient
-
-mongo_uri = 'mongodb://' + os.environ["MONGO_HOST"] + ':' + os.environ["MONGO_PORT"]
-db = MongoClient(mongo_uri)['test_db']
+from .services import MongoTodoService
 
 class TodoListView(APIView):
 
     def get(self, request):
-        todos = db['todo_collection'].find()
-
-        todo_list=[]
-        for todo in todos:
-            todo_list.append(todo['todo'])
- 
+        todo_service = MongoTodoService()
+        todo_list = todo_service.get_all_todos()
         return Response(todo_list, status=status.HTTP_200_OK)
-        
-    def post(self, request): 
+
+    def post(self, request):
+        todo_service = MongoTodoService()
         data = request.data
-        result = db['todo_collection'].insert_one(data)
+        result = todo_service.create_todo(data)
         return Response({"id": str(result.inserted_id)}, status=status.HTTP_201_CREATED)
-    
